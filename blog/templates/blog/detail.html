@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ blog_text.title }}</h1>
-<p>{{ blog_text.updated_at }}</p>
-{{ blog_text.text | safe | linebreaksbr }}
-<hr /></br>
-<a href="{% url 'blog:index' %}">トップページに戻る</a>
+<div class="container alert alert-success" role="alert">
+    <h4>タイトル：{{ blog.title }}</h4>
+</div>
+<div class="container alert alert-light" role="alert">
+    <p>{{ blog.updated_at }}</p>
+    {{ blog.text | safe | linebreaksbr }}
+    <hr /></br>
+    <a href="{% url 'blog:index' %}">トップページに戻る</a>
+</div>
+
+
 {% endblock %}
