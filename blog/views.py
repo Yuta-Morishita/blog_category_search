@@ -1,19 +1,34 @@
-from django.shortcuts import render, get_object_or_404
+
 from .models import Category, Blog
+from django.views import generic
 
 
-def index(request):
-    blog = Blog.objects.order_by('-id')
-    return render(request, 'blog/index.html', {'blog': blog})
+class IndexView(generic.ListView):
+    model = Blog
+    template_name = 'blog/index.html'
+
+    def get_queryset(self):
+        queryset = Blog.objects.order_by('-id')
+        return queryset
 
 
-def category(request, category):
-    category = Category.objects.get(name=category)
-    blog = Blog.objects.filter(category=category)
-    return render(request, 'blog/index.html',
-                  {'category': category, 'blog': blog})
+class CategoryView(generic.ListView):
+    model = Blog
+    template_name = 'blog/index.html'
+
+    def get_queryset(self):
+        category = Category.objects.get(name=self.kwargs['category'])
+        queryset = Blog.objects.order_by('-id').filter(category=category)
+        return queryset
+    """ アクセスされた値を取得し辞書に格納 """
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_key'] = self.kwargs['category']
+        return context
 
 
-def detail(request, blog_id):
-    blog_text = get_object_or_404(Blog, id=blog_id)
-    return render(request, 'blog/detail.html', {'blog_text': blog_text})
+class DetailView(generic.DetailView):
+    model = Blog
+    template_name = 'blog/detail.html'
+    context_object_name = 'blog'
