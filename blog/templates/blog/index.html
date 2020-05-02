@@ -1,10 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href="{% url 'blog:index' %}">
+<a href='{% url 'blog:index' %}'>
     <p>トップ</p>
 </a>
-<h1>一覧</h1><br>
+<div>
+    <h4>カテゴリー</h4>
+    <!-- context.pyのオブジェクトを取得しています。（category_list）-->
+    {% for category in category_list %}
+    <a href="{% url 'blog:category' category %}">
+        <p style='float: left; margin-right: 5px;'>
+            {{ category.name }}
+        </p>
+    </a>
+    {% endfor %}
+</div><br>
+<!-- 上記のfloatスタイルの影響を受けないようにしている。（clear）-->
+<h1 style=' clear: both;'>一覧</h1><br>
+{% if category %}
+<h3>カテゴリー：{{ category }}</h3>
+{% endif %}
 {% for blog in blog %}
 <ul>
     <li>
