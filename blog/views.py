@@ -1,5 +1,5 @@
 
-from .models import Category, Blog
+from .models import Category, Tag, Blog
 from django.views import generic
 
 
@@ -25,6 +25,21 @@ class CategoryView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category_key'] = self.kwargs['category']
+        return context
+
+
+class TagView(generic.ListView):
+    model = Blog
+    template_name = 'blog/index.html'
+
+    def get_queryset(self):
+        tag = Tag.objects.get(name=self.kwargs['tag'])
+        queryset = Blog.objects.order_by('-id').filter(tag=tag)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_key'] = self.kwargs['tag']
         return context
 
 
